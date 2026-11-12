@@ -188,7 +188,7 @@ main {max-width:850px;margin:auto}
   <article class="panel">
     <div class="label">BRTI Settlement Reference</div>
     <div class="value blue" id="brti">Loading...</div>
-    <div class="sub" id="brtiStatus">Waiting for test</div>
+    <div class="sub" id="brtiStatus">Waiting for live feed</div>
   </article>
 
   <article class="panel">
@@ -247,9 +247,10 @@ main {max-width:850px;margin:auto}
 </section>
 
 <div class="notice">
-  <b>Safety notice:</b> The BRTI panel is currently a connection diagnostic.
-  Direction and trading signals remain disabled until the correct settlement
-  data and calculation method are verified. This dashboard does not place orders.
+  <b>Safety notice:</b> BRTI now reads the latest available Kalshi
+  reference-price observation. Direction and trading signals remain
+  disabled until the contract's settlement calculation and timing
+  are verified. This dashboard does not place orders.
 </div>
 
 <div class="action">
@@ -357,47 +358,53 @@ async function refresh(){
 
     $("direction").textContent="UNAVAILABLE";
     $("directionNote").textContent=
-      "BRTI feed has not been verified. Signals remain disabled.";
+      "BRTI feed is being monitored. Signals remain disabled pending settlement verification.";
 
-    // BRTI CONNECTION DIAGNOSTIC
-    $("brti").textContent="TESTING...";
-    $("brtiStatus").textContent="Contacting Cloudflare Worker...";
+    // LIVE KALSHI BRTI FEED
+    $("brti").textContent="LOADING...";
+    $("brtiStatus").textContent="Reading Kalshi BRTI feed...";
 
     try {
 
-      const br=await fetch(API+"/brti",{cache:"no-store"});
-      const raw=await br.text();
+      const br=await fetch(API+"/brti",{
+        cache:"no-store"
+      });
 
-      $("brtiStatus").textContent=
-        "HTTP "+br.status+" | "+raw.slice(0,150);
+      const bd=await br.json();
 
       if(!br.ok) {
-        $("brti").textContent="ERROR";
-      } else {
-
-        let bd;
-
-        try {
-          bd=JSON.parse(raw);
-        } catch(e) {
-          $("brti").textContent="BAD RESPONSE";
-        }
-
-        if(bd) {
-          const v=
-            bd.payload?.latest_values?.BRTI?.value ??
-            bd.latest_values?.BRTI?.value ??
-            bd.value;
-
-          $("brti").textContent=
-            v==null?"NO VALUE":money(v);
-        }
+        throw Error("BRTI HTTP "+br.status);
       }
+
+      // The Worker response contains data.payload,
+      // which is an array of timestamped BRTI readings.
+      const readings=bd.data?.payload || [];
+
+      if(!readings.length) {
+        throw Error("No BRTI readings received");
+      }
+
+      // Sort observations by timestamp, oldest to newest.
+      readings.sort((a,b)=>a.time-b.time);
+
+      const latest=readings[readings.length-1];
+      const price=Number(latest.value);
+
+      if(!Number.isFinite(price)) {
+        throw Error("Invalid BRTI price");
+      }
+
+      $("brti").textContent=money(price);
+
+      $("brtiStatus").textContent=
+        "LIVE BRTI • Updated "+
+        new Date(latest.time).toLocaleTimeString();
 
     } catch(e) {
 
-      $("brti").textContent="FAILED";
-      $("brtiStatus").textContent=String(e).slice(0,150);
+      $("brti").textContent="UNAVAILABLE";
+      $("brtiStatus").textContent=
+        String(e.message||e).slice(0,150);
 
     }
 
