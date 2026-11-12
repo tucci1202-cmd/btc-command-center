@@ -189,7 +189,7 @@ main{max-width:1440px;margin:auto}
 </div>
 <div class="action">
  <button class="btn" id="refresh">Refresh now</button>
- <span class="sub">Automatic refresh every 10 seconds</span>
+ <span class="sub">Automatic refresh every 1 second</span>
 </div>
 <p class="foot">BTC Command Center • Futuristic blue interface • Read-only mode.</p>
 </main>
@@ -360,8 +360,10 @@ async function refresh(){
 $("refresh").addEventListener("click",()=>{refresh();refreshSpot()});
 refresh();
 refreshSpot();
-setInterval(refresh,10000);
-setInterval(refreshSpot,10000);
+
+/* AUTOMATIC ONE-SECOND REFRESH */
+setInterval(refresh,1000);
+setInterval(refreshSpot,1000);
 setInterval(countdown,1000);
 
 if("serviceWorker" in navigator&&location.protocol.startsWith("http")){
