@@ -326,7 +326,6 @@ async function refresh(){
 
   const target=Number(m.floor_strike);
   if(Number.isFinite(target)&&target!==lastTarget){priceHistory=[];lastTarget=target}
-  $("brti").textContent="LOADING...";
   $("brtiStatus").textContent="Reading Kalshi BRTI feed...";
 
   const br=await fetch(API+"/brti",{cache:"no-store"});
