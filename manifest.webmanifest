@@ -1,0 +1,10 @@
+{
+  "name": "BTC Command Center",
+  "short_name": "BTC Center",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#050d1c",
+  "theme_color": "#06152c",
+  "description": "Read-only Kalshi BTC 15-minute market dashboard",
+  "icons": []
+}

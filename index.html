@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06152c">
+<meta name="description" content="Read-only Kalshi BTC 15-minute market dashboard">
+<link rel="manifest" href="manifest.webmanifest">
+<title>BTC Command Center</title>
+<style>
+:root{color-scheme:dark;--bg:#050d1c;--panel:#0b1c36;--line:#1465b8;--blue:#24a8ff;--cyan:#75d8ff;--green:#29e69a;--red:#ff536d;--yellow:#ffc857;--muted:#8ca9c8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#123e70 0,#08172d 42%,#030914 100%);color:#eaf6ff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh;padding:18px 14px 30px}
+main{max-width:850px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 2px 18px}.brand{display:flex;align-items:center;gap:11px}.coin{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#ffb84d,#d97812);display:grid;place-items:center;color:#1b1308;font-weight:900;font-size:27px;box-shadow:0 0 22px #ff9e253d,inset 0 2px 4px #fff8}.brand h1{font-size:clamp(17px,4vw,25px);letter-spacing:.06em;margin:0;text-shadow:0 0 18px #279fff7a}.brand small{color:var(--cyan);letter-spacing:.17em;font-size:9px}.pill{border:1px solid #23649c;background:#071b32;border-radius:99px;padding:8px 11px;font-size:10px;color:var(--yellow);white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.panel{background:linear-gradient(145deg,#102846d9,#07152bd9);border:1px solid #1760a0;border-radius:17px;padding:15px;box-shadow:0 9px 24px #0008,inset 0 1px 0 #8bd4ff20;position:relative;overflow:hidden}.panel:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,#ffffff08,transparent 35%)}.wide{grid-column:1/-1}.label{font-size:10px;color:#9bb8d7;letter-spacing:.13em;text-transform:uppercase}.value{font-size:clamp(24px,7vw,39px);font-weight:800;letter-spacing:-.04em;margin:8px 0 3px;text-shadow:0 0 18px #1e9bff50;overflow-wrap:anywhere}.sub{font-size:11px;color:var(--muted)}.blue{color:var(--cyan)}.green{color:var(--green)}.red{color:var(--red)}.yellow{color:var(--yellow)}
+.direction{font-size:clamp(25px,7vw,38px);font-weight:900;letter-spacing:.02em;margin:8px 0}.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.signal{border-radius:13px;padding:13px 8px;text-align:center;background:#08172b;border:1px solid #1d4d7b;min-height:86px}.signal strong{display:block;font-size:15px;margin-bottom:5px}.signal span{font-size:9px;color:#9bb8d7}.action{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px}.btn{border:1px solid #2386d3;background:linear-gradient(180deg,#15518a,#0a2b50);color:white;border-radius:10px;padding:10px 14px;font-weight:700}.foot{font-size:10px;color:#7896b7;line-height:1.5;margin:15px 3px}.rowline{display:flex;justify-content:space-between;gap:8px;margin-top:10px;font-size:11px}.rowline span:first-child{color:#91aac5}.rowline span:last-child{text-align:right;overflow-wrap:anywhere}.notice{border:1px solid #80652b;background:#2b210e;border-radius:12px;padding:11px;font-size:11px;color:#ffe0a0;line-height:1.45;margin-top:12px}
+@media(min-width:650px){body{padding:28px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.wide{grid-column:1/-1}.top{margin-bottom:22px}}
+</style>
+</head>
+<body>
+<main>
+<header class="top">
+ <div class="brand"><div class="coin">₿</div><div><h1>BTC COMMAND CENTER</h1><small>KALSHI • 15-MINUTE MARKETS</small></div></div>
+ <div class="pill" id="connection">● CONNECTING</div>
+</header>
+<section class="grid">
+ <article class="panel"><div class="label">Kalshi market</div><div class="value blue" id="market">Loading…</div><div class="sub" id="ticker">Finding active contract</div></article>
+ <article class="panel"><div class="label">Market target</div><div class="value" id="target">--</div><div class="sub" id="strikeType">Kalshi strike</div></article>
+ <article class="panel"><div class="label">Time remaining</div><div class="value blue" id="countdown">--:--</div><div class="sub" id="expiry">Waiting for close time</div></article>
+ <article class="panel"><div class="label">YES bid / ask</div><div class="value" id="yesquote">-- / --</div><div class="sub">Kalshi contract quotes</div></article>
+ <article class="panel"><div class="label">NO bid / ask</div><div class="value" id="noquote">-- / --</div><div class="sub">Kalshi contract quotes</div></article>
+ <article class="panel"><div class="label">Market status</div><div class="value green" id="status">--</div><div class="sub" id="updated">Not yet refreshed</div></article>
+ <article class="panel wide">
+  <div class="label">Current / projected direction</div><div class="direction yellow" id="direction">UNAVAILABLE</div>
+  <div class="sub" id="directionNote">Waiting for verified Kalshi settlement reference feed (BRTI).</div>
+ </article>
+ <article class="panel wide">
+  <div class="label">Scalp signal</div>
+  <div class="three">
+   <div class="signal"><strong class="green">BUY YES</strong><span>Disabled until reference feed is verified</span></div>
+   <div class="signal"><strong class="yellow">WAIT</strong><span>Read-only safety mode</span></div>
+   <div class="signal"><strong class="red">BUY NO</strong><span>Disabled until reference feed is verified</span></div>
+  </div>
+  <div class="rowline"><span>Flip risk</span><span class="yellow">UNAVAILABLE</span></div>
+  <div class="rowline"><span>Flip warning</span><span class="yellow">UNAVAILABLE</span></div>
+  <div class="rowline"><span>Entry / stop / take profit</span><span>Not calculated</span></div>
+ </article>
+</section>
+<div class="notice"><b>Important:</b> This mobile starter reads public Kalshi market metadata and contract quotes only. It does not yet connect the official settlement-reference price (BRTI), so direction, flip-risk, and trade signals are intentionally disabled. Do not use it to make live trading decisions.</div>
+<div class="action"><button class="btn" id="refresh">Refresh now</button><span class="sub">Auto-refreshes every 10 seconds</span></div>
+<p class="foot">BTC Command Center • Mobile preview • No account login, API key, or order placement. Market data can be delayed or unavailable. Always confirm contract rules and settlement source on Kalshi.</p>
+</main>
+<script>
+const API="https://external-api.kalshi.com/trade-api/v2";
+const $=id=>document.getElementById(id);
+const money=v=>{if(v===null||v===undefined||v==="")return "--";let n=Number(v);return Number.isFinite(n)?"$"+n.toLocaleString("en-US",{maximumFractionDigits:2}):"--"};
+const quote=v=>v===null||v===undefined||v===""?"--":(Number(v)*100).toFixed(1)+"¢";
+let closeAt=null;
+function countdown(){if(!closeAt)return;let s=Math.max(0,Math.floor((closeAt-Date.now())/1000));$("countdown").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+async function refresh(){
+ $("connection").textContent="● CONNECTING";$("connection").style.color="var(--yellow)";
+ try{
+  const u=API+"/markets?series_ticker=KXBTC15M&status=open&limit=100";
+  const res=await fetch(u,{cache:"no-store"});if(!res.ok)throw Error("Kalshi API returned "+res.status);
+  const data=await res.json();const now=Date.now();
+  const markets=(data.markets||[]).filter(m=>m.status==="active"||m.status==="initialized"||m.status==="open");
+  const live=markets.map(m=>({m,t:new Date(m.close_time||m.expected_expiration_time||0).getTime()})).filter(x=>x.t>now).sort((a,b)=>a.t-b.t);
+  if(!live.length)throw Error("No future open KXBTC15M contract was returned");
+  const m=live[0].m;closeAt=live[0].t;
+  $("market").textContent="BTC 15M";
+  $("ticker").textContent=m.ticker||"KXBTC15M";
+  $("target").textContent=money(m.floor_strike);
+  $("strikeType").textContent=m.floor_strike==null?"Strike not posted by Kalshi yet":("Strike type: "+(m.strike_type||"see contract rules"));
+  $("expiry").textContent="Closes "+new Date(closeAt).toLocaleTimeString([], {hour:"numeric",minute:"2-digit",second:"2-digit"});
+  $("yesquote").textContent=quote(m.yes_bid_dollars??(m.yes_bid!=null?m.yes_bid/100:null))+" / "+quote(m.yes_ask_dollars??(m.yes_ask!=null?m.yes_ask/100:null));
+  $("noquote").textContent=quote(m.no_bid_dollars??(m.no_bid!=null?m.no_bid/100:null))+" / "+quote(m.no_ask_dollars??(m.no_ask!=null?m.no_ask/100:null));
+  $("status").textContent=(m.status||"OPEN").toUpperCase();
+  $("updated").textContent="Updated "+new Date().toLocaleTimeString();
+  $("connection").textContent="● KALSHI CONNECTED";$("connection").style.color="var(--green)";
+  $("direction").textContent="UNAVAILABLE";$("directionNote").textContent="BRTI settlement-reference feed is not connected. Signals remain disabled.";
+  countdown();
+ }catch(e){
+  $("connection").textContent="● CONNECTION ISSUE";$("connection").style.color="var(--red)";
+  $("market").textContent="No live data";$("ticker").textContent=String(e.message||e).slice(0,100);
+ }
+}
+$("refresh").addEventListener("click",refresh);
+refresh();setInterval(refresh,10000);setInterval(countdown,1000);
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script>
+</body></html>
