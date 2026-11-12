@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,416 +6,192 @@
 <meta name="theme-color" content="#06152c">
 <title>BTC Command Center</title>
 <link rel="manifest" href="manifest.webmanifest">
-
 <style>
 :root {
-  color-scheme:dark;
-  --bg:#030916;
-  --panel:#0b1e3b;
-  --blue:#24a8ff;
-  --cyan:#75d8ff;
-  --green:#29e69a;
-  --red:#ff536d;
-  --yellow:#ffc857;
-  --muted:#8ca9c8;
+ color-scheme:dark;
+ --blue:#24a8ff;--cyan:#75d8ff;--green:#29e69a;
+ --red:#ff536d;--yellow:#ffc857;--muted:#8ca9c8;
 }
-* {box-sizing:border-box}
-
-body {
-  margin:0;
-  background:
-    radial-gradient(ellipse at 50% -10%,#174e85 0,#0a1d39 35%,#030916 85%);
-  color:#eaf6ff;
-  font-family:system-ui,sans-serif;
-  min-height:100vh;
-  padding:18px 13px 30px;
+*{box-sizing:border-box}
+body{
+ margin:0;padding:18px 13px 30px;min-height:100vh;
+ background:radial-gradient(ellipse at 50% -10%,#174e85 0,#0a1d39 35%,#030916 85%);
+ color:#eaf6ff;font-family:system-ui,sans-serif
 }
-
-main {max-width:900px;margin:auto}
-
-.top {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin:5px 2px 20px;
+main{max-width:1440px;margin:auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 2px 20px}
+.brand{display:flex;align-items:center;gap:12px}
+.coin{
+ width:48px;height:48px;border-radius:15px;display:grid;place-items:center;
+ background:linear-gradient(145deg,#ffe09a,#e18b20 55%,#87420b);
+ color:#1b1308;font-weight:900;font-size:30px;
+ box-shadow:inset 2px 2px 5px #fff8,inset -4px -5px 8px #542700,0 7px 18px #0009
 }
-
-.brand {display:flex;align-items:center;gap:12px}
-
-.coin {
-  width:48px;height:48px;border-radius:15px;
-  background:linear-gradient(145deg,#ffe09a,#e18b20 55%,#87420b);
-  display:grid;place-items:center;
-  color:#1b1308;font-weight:900;font-size:30px;
-  box-shadow:inset 2px 2px 5px #fff8,
-             inset -4px -5px 8px #542700,
-             0 7px 18px #0009;
+.brand h1{font-size:clamp(16px,4vw,25px);letter-spacing:.06em;margin:0;text-shadow:0 0 15px #24a8ff77}
+.brand small{color:var(--cyan);letter-spacing:.15em;font-size:9px}
+.pill{
+ border:1px solid #3287c8;background:linear-gradient(145deg,#123b65,#06152a);
+ border-radius:99px;padding:9px 11px;font-size:9px;color:var(--yellow);
+ white-space:nowrap;box-shadow:0 4px 12px #0008,inset 0 1px 2px #ffffff20
 }
-
-.brand h1 {
-  font-size:clamp(16px,4vw,25px);
-  letter-spacing:.06em;margin:0;
-  text-shadow:0 0 15px #24a8ff77;
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.panel{
+ background:linear-gradient(145deg,#183b60 0%,#0c2443 38%,#06152b 100%);
+ border:1px solid #286da5;border-radius:18px;padding:16px;
+ box-shadow:inset 0 1px 1px #ffffff20,inset 0 -8px 18px #020b19a8,
+ 0 10px 22px #0009,0 0 12px #168bff18;
+ position:relative;overflow:hidden
 }
-.brand small {
-  color:var(--cyan);
-  letter-spacing:.15em;font-size:9px;
+.panel:before{
+ content:"";position:absolute;top:0;left:12%;width:76%;height:1px;
+ background:linear-gradient(90deg,transparent,#9de4ff,transparent);opacity:.65
 }
-
-.pill {
-  border:1px solid #3287c8;
-  background:linear-gradient(145deg,#123b65,#06152a);
-  border-radius:99px;
-  padding:9px 11px;
-  font-size:9px;
-  color:var(--yellow);
-  white-space:nowrap;
-  box-shadow:0 4px 12px #0008,inset 0 1px 2px #ffffff20;
+.panel:after{
+ content:"";position:absolute;width:110px;height:110px;top:-65px;right:-55px;
+ background:#48baff;filter:blur(55px);opacity:.12;pointer-events:none
 }
-
-.grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
+.wide{grid-column:1/-1}
+.label{font-size:10px;color:#a9c9e8;letter-spacing:.14em;text-transform:uppercase}
+.value{font-size:clamp(23px,5vw,38px);font-weight:850;margin:9px 0 3px;overflow-wrap:anywhere;text-shadow:0 0 15px #24a8ff35}
+.sub{font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.blue{color:var(--cyan)}.green{color:var(--green)}.red{color:var(--red)}.yellow{color:var(--yellow)}
+.hero{
+ border:1px solid #3197e2;
+ background:radial-gradient(ellipse at 50% 0%,#1b5b91 0,#102e50 45%,#07162d 100%);
+ box-shadow:inset 0 2px 3px #ffffff25,inset 0 -12px 25px #020917,
+ 0 12px 28px #000b,0 0 22px #168bff22
 }
-
-.panel {
-  background:
-    linear-gradient(145deg,#183b60 0%,#0c2443 38%,#06152b 100%);
-  border:1px solid #286da5;
-  border-radius:18px;
-  padding:16px;
-  box-shadow:
-    inset 0 1px 1px #ffffff20,
-    inset 0 -8px 18px #020b19a8,
-    0 10px 22px #0009,
-    0 0 12px #168bff18;
-  position:relative;
-  overflow:hidden;
+.hero-price{font-size:clamp(25px,5vw,46px);font-weight:900;color:#8ce4ff;text-shadow:0 0 18px #24a8ff88;margin:12px 0 5px}
+.rowline{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:13px;font-size:12px}
+.rowline span:first-child{color:#a8c4e1}
+.rowline strong{text-align:right;overflow-wrap:anywhere}
+.direction-box{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:13px}
+.indicator{
+ padding:14px 11px;border-radius:14px;
+ background:linear-gradient(145deg,#153b61,#07172e);border:1px solid #27618f;
+ box-shadow:inset 0 1px 2px #ffffff20,0 5px 12px #0008
 }
-
-.panel:before {
-  content:"";
-  position:absolute;
-  top:0;left:12%;
-  width:76%;height:1px;
-  background:linear-gradient(90deg,transparent,#9de4ff,transparent);
-  opacity:.65;
+.indicator small{display:block;font-size:9px;color:#a9c9e8;letter-spacing:.1em;text-transform:uppercase}
+.indicator strong{display:block;margin-top:7px;font-size:19px;overflow-wrap:anywhere}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.signal{
+ border-radius:14px;padding:13px 7px;text-align:center;
+ background:linear-gradient(145deg,#153454,#07152a);border:1px solid #28577d;
+ box-shadow:inset 0 1px 2px #ffffff18,0 5px 12px #0008;min-height:83px
 }
-
-.panel:after {
-  content:"";
-  position:absolute;
-  width:110px;height:110px;
-  top:-65px;right:-55px;
-  background:#48baff;
-  filter:blur(55px);
-  opacity:.12;
-  pointer-events:none;
+.signal strong{display:block;font-size:14px;margin-bottom:5px}
+.signal span{font-size:9px;color:#9bb8d7}
+.action{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:15px}
+.btn{
+ border:1px solid #56baff;background:linear-gradient(180deg,#238bd4,#0b3766 65%,#061a36);
+ color:white;border-radius:12px;padding:12px 17px;font-weight:800;
+ box-shadow:inset 0 1px 2px #ffffff55,0 6px 14px #0009,0 0 12px #168bff30
 }
-
-.wide {grid-column:1/-1}
-
-.label {
-  font-size:10px;
-  color:#a9c9e8;
-  letter-spacing:.14em;
-  text-transform:uppercase;
+.btn:active{transform:translateY(2px)}
+.notice{
+ border:1px solid #80652b;background:linear-gradient(145deg,#382b13,#211707);
+ border-radius:13px;padding:12px;font-size:11px;color:#ffe0a0;line-height:1.5;
+ margin-top:13px;box-shadow:0 6px 15px #0007
 }
-
-.value {
-  font-size:clamp(23px,7vw,38px);
-  font-weight:850;
-  margin:9px 0 3px;
-  overflow-wrap:anywhere;
-  text-shadow:0 0 15px #24a8ff35;
+.foot{font-size:10px;color:#7896b7;line-height:1.5;margin:16px 3px}
+@media(min-width:1000px){
+ body{padding:24px 30px}
+ .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 }
-
-.sub {
-  font-size:11px;
-  color:var(--muted);
-  overflow-wrap:anywhere;
-}
-
-.blue {color:var(--cyan)}
-.green {color:var(--green)}
-.red {color:var(--red)}
-.yellow {color:var(--yellow)}
-
-.hero {
-  border:1px solid #3197e2;
-  background:
-    radial-gradient(ellipse at 50% 0%,#1b5b91 0,#102e50 45%,#07162d 100%);
-  box-shadow:
-    inset 0 2px 3px #ffffff25,
-    inset 0 -12px 25px #020917,
-    0 12px 28px #000b,
-    0 0 22px #168bff22;
-}
-
-.hero-price {
-  font-size:clamp(30px,9vw,48px);
-  font-weight:900;
-  color:#8ce4ff;
-  text-shadow:0 0 18px #24a8ff88;
-  margin:12px 0 5px;
-}
-
-.rowline {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  margin-top:13px;
-  font-size:12px;
-}
-
-.rowline span:first-child {color:#a8c4e1}
-.rowline strong {text-align:right;overflow-wrap:anywhere}
-
-.direction-box {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-  margin-top:13px;
-}
-
-.indicator {
-  padding:14px 11px;
-  border-radius:14px;
-  background:linear-gradient(145deg,#153b61,#07172e);
-  border:1px solid #27618f;
-  box-shadow:inset 0 1px 2px #ffffff20,
-             0 5px 12px #0008;
-}
-
-.indicator small {
-  display:block;
-  font-size:9px;
-  color:#a9c9e8;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-}
-
-.indicator strong {
-  display:block;
-  margin-top:7px;
-  font-size:19px;
-  overflow-wrap:anywhere;
-}
-
-.three {
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:9px;
-}
-
-.signal {
-  border-radius:14px;
-  padding:13px 7px;
-  text-align:center;
-  background:linear-gradient(145deg,#153454,#07152a);
-  border:1px solid #28577d;
-  box-shadow:inset 0 1px 2px #ffffff18,
-             0 5px 12px #0008;
-  min-height:83px;
-}
-
-.signal strong {display:block;font-size:14px;margin-bottom:5px}
-.signal span {font-size:9px;color:#9bb8d7}
-
-.action {
-  display:flex;
-  gap:9px;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-top:15px;
-}
-
-.btn {
-  border:1px solid #56baff;
-  background:linear-gradient(180deg,#238bd4,#0b3766 65%,#061a36);
-  color:white;
-  border-radius:12px;
-  padding:12px 17px;
-  font-weight:800;
-  box-shadow:inset 0 1px 2px #ffffff55,
-             0 6px 14px #0009,
-             0 0 12px #168bff30;
-}
-
-.btn:active {transform:translateY(2px)}
-
-.notice {
-  border:1px solid #80652b;
-  background:linear-gradient(145deg,#382b13,#211707);
-  border-radius:13px;
-  padding:12px;
-  font-size:11px;
-  color:#ffe0a0;
-  line-height:1.5;
-  margin-top:13px;
-  box-shadow:0 6px 15px #0007;
-}
-
-.foot {
-  font-size:10px;
-  color:#7896b7;
-  line-height:1.5;
-  margin:16px 3px;
-}
-
-@media(min-width:650px) {
-  body {padding:28px}
-  .grid {grid-template-columns:repeat(3,minmax(0,1fr))}
-  .wide {grid-column:1/-1}
+@media(orientation:landscape) and (max-height:600px){
+ body{padding:10px 16px}
+ .top{margin:2px 2px 12px}
+ .panel{padding:12px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .hero-price{font-size:clamp(27px,5vw,42px)}
 }
 </style>
 </head>
-
 <body>
 <main>
-
 <header class="top">
-  <div class="brand">
-    <div class="coin">₿</div>
-    <div>
-      <h1>BTC COMMAND CENTER</h1>
-      <small>KALSHI • 15-MINUTE MARKETS</small>
-    </div>
-  </div>
-  <div class="pill" id="connection">● CONNECTING</div>
+ <div class="brand">
+  <div class="coin">₿</div>
+  <div><h1>BTC COMMAND CENTER</h1><small>KALSHI • 15-MINUTE MARKETS</small></div>
+ </div>
+ <div class="pill" id="connection">● CONNECTING</div>
 </header>
 
 <section class="grid">
+ <article class="panel">
+  <div class="label">Kalshi market</div>
+  <div class="value blue" id="market">Loading...</div>
+  <div class="sub" id="ticker">Finding active contract</div>
+ </article>
+ <article class="panel">
+  <div class="label">Market target</div>
+  <div class="value" id="target">--</div>
+  <div class="sub" id="strikeType">Kalshi strike</div>
+ </article>
+ <article class="panel">
+  <div class="label">Time remaining</div>
+  <div class="value blue" id="countdown">--:--</div>
+  <div class="sub" id="expiry">Waiting for close time</div>
+ </article>
 
-  <article class="panel">
-    <div class="label">Kalshi market</div>
-    <div class="value blue" id="market">Loading...</div>
-    <div class="sub" id="ticker">Finding active contract</div>
-  </article>
+ <article class="panel hero">
+  <div class="label">Current BTC spot price</div>
+  <div class="hero-price" id="spotPrice">Loading...</div>
+  <div class="sub" id="spotStatus">Connecting to live BTC/USD spot feed</div>
+ </article>
+ <article class="panel hero">
+  <div class="label">Kalshi BRTI reference</div>
+  <div class="hero-price" id="brti">Loading...</div>
+  <div class="sub" id="brtiStatus">Connecting to Kalshi feed</div>
+ </article>
+ <article class="panel">
+  <div class="label">YES bid / ask</div>
+  <div class="value" id="yesquote">-- / --</div>
+  <div class="sub">Kalshi contract quotes</div>
+ </article>
+ <article class="panel">
+  <div class="label">NO bid / ask</div>
+  <div class="value" id="noquote">-- / --</div>
+  <div class="sub">Kalshi contract quotes</div>
+ </article>
+ <article class="panel">
+  <div class="label">Market status</div>
+  <div class="value green" id="status">--</div>
+  <div class="sub" id="updated">Not yet refreshed</div>
+ </article>
 
-  <article class="panel">
-    <div class="label">Market target</div>
-    <div class="value" id="target">--</div>
-    <div class="sub" id="strikeType">Kalshi strike</div>
-  </article>
+ <article class="panel wide">
+  <div class="label">BTC Direction Intelligence</div>
+  <div class="direction-box">
+   <div class="indicator"><small>Current direction</small><strong id="direction" class="yellow">WAIT</strong></div>
+   <div class="indicator"><small>Projected direction</small><strong id="projectedDirection" class="yellow">WAIT</strong></div>
+   <div class="indicator"><small>Distance to target</small><strong id="distance" class="blue">--</strong></div>
+   <div class="indicator"><small>Flip risk</small><strong id="flipRisk" class="yellow">WAIT</strong></div>
+  </div>
+  <div class="rowline"><span>Flip warning</span><strong id="flipWarning" class="yellow">WAITING</strong></div>
+  <div class="rowline"><span>Recent momentum</span><strong id="momentum" class="blue">COLLECTING</strong></div>
+  <div class="sub" id="directionNote" style="margin-top:12px">Collecting live BRTI observations...</div>
+ </article>
 
-  <article class="panel">
-    <div class="label">Time remaining</div>
-    <div class="value blue" id="countdown">--:--</div>
-    <div class="sub" id="expiry">Waiting for close time</div>
-  </article>
-
-  <article class="panel hero">
-    <div class="label">Live BRTI reference</div>
-    <div class="hero-price" id="brti">Loading...</div>
-    <div class="sub" id="brtiStatus">Connecting to Kalshi feed</div>
-  </article>
-
-  <article class="panel">
-    <div class="label">YES bid / ask</div>
-    <div class="value" id="yesquote">-- / --</div>
-    <div class="sub">Kalshi contract quotes</div>
-  </article>
-
-  <article class="panel">
-    <div class="label">NO bid / ask</div>
-    <div class="value" id="noquote">-- / --</div>
-    <div class="sub">Kalshi contract quotes</div>
-  </article>
-
-  <article class="panel">
-    <div class="label">Market status</div>
-    <div class="value green" id="status">--</div>
-    <div class="sub" id="updated">Not yet refreshed</div>
-  </article>
-
-  <article class="panel wide">
-    <div class="label">BTC Direction Intelligence</div>
-
-    <div class="direction-box">
-      <div class="indicator">
-        <small>Current direction</small>
-        <strong id="direction" class="yellow">WAIT</strong>
-      </div>
-
-      <div class="indicator">
-        <small>Projected direction</small>
-        <strong id="projectedDirection" class="yellow">WAIT</strong>
-      </div>
-
-      <div class="indicator">
-        <small>Distance to target</small>
-        <strong id="distance" class="blue">--</strong>
-      </div>
-
-      <div class="indicator">
-        <small>Flip risk</small>
-        <strong id="flipRisk" class="yellow">WAIT</strong>
-      </div>
-    </div>
-
-    <div class="rowline">
-      <span>Flip warning</span>
-      <strong id="flipWarning" class="yellow">WAITING</strong>
-    </div>
-
-    <div class="rowline">
-      <span>Recent momentum</span>
-      <strong id="momentum" class="blue">COLLECTING</strong>
-    </div>
-
-    <div class="sub" id="directionNote" style="margin-top:12px">
-      Collecting live BRTI observations...
-    </div>
-  </article>
-
-  <article class="panel wide">
-    <div class="label">Scalp signal</div>
-
-    <div class="three">
-      <div class="signal">
-        <strong class="green">BUY YES</strong>
-        <span>Disabled during testing</span>
-      </div>
-
-      <div class="signal">
-        <strong class="yellow">WAIT</strong>
-        <span>Read-only safety mode</span>
-      </div>
-
-      <div class="signal">
-        <strong class="red">BUY NO</strong>
-        <span>Disabled during testing</span>
-      </div>
-    </div>
-
-    <div class="rowline">
-      <span>Entry / stop / take profit</span>
-      <strong>Not calculated</strong>
-    </div>
-  </article>
-
+ <article class="panel wide">
+  <div class="label">Scalp signal</div>
+  <div class="three">
+   <div class="signal"><strong class="green">BUY YES</strong><span>Disabled during testing</span></div>
+   <div class="signal"><strong class="yellow">WAIT</strong><span>Read-only safety mode</span></div>
+   <div class="signal"><strong class="red">BUY NO</strong><span>Disabled during testing</span></div>
+  </div>
+  <div class="rowline"><span>Entry / stop / take profit</span><strong>Not calculated</strong></div>
+ </article>
 </section>
 
 <div class="notice">
-  <b>Safety notice:</b> Direction and flip indicators are experimental
-  estimates based on recent BRTI observations. They are not settlement
-  guarantees or calibrated probabilities. Confirm the official Kalshi
-  contract rules. This dashboard does not place orders.
+ <b>Safety notice:</b> Direction and flip indicators are experimental estimates based on recent BRTI observations. They are not settlement guarantees or calibrated probabilities. Confirm the official Kalshi contract rules. This dashboard does not place orders.
 </div>
-
 <div class="action">
-  <button class="btn" id="refresh">Refresh now</button>
-  <span class="sub">Automatic refresh every 10 seconds</span>
+ <button class="btn" id="refresh">Refresh now</button>
+ <span class="sub">Automatic refresh every 10 seconds</span>
 </div>
-
-<p class="foot">
-  BTC Command Center • Futuristic blue interface • Read-only mode.
-</p>
-
+<p class="foot">BTC Command Center • Futuristic blue interface • Read-only mode.</p>
 </main>
 
 <script>
@@ -424,314 +199,174 @@ const API="https://btc-kalshi-bridge.tucci1202.workers.dev";
 const $=id=>document.getElementById(id);
 
 const money=v=>{
-  const n=Number(v);
-  return Number.isFinite(n)
-    ? "$"+n.toLocaleString("en-US",{maximumFractionDigits:2})
-    : "--";
+ const n=Number(v);
+ return Number.isFinite(n)?"$"+n.toLocaleString("en-US",{maximumFractionDigits:2}):"--";
 };
-
 const quote=v=>{
-  if(v===null||v===undefined||v==="")return "--";
-  return (Number(v)*100).toFixed(1)+"¢";
+ if(v===null||v===undefined||v==="")return "--";
+ return (Number(v)*100).toFixed(1)+"¢";
 };
 
-let closeAt=null;
-let priceHistory=[];
-let lastTarget=null;
-let refreshing=false;
+let closeAt=null,priceHistory=[],lastTarget=null;
+let refreshing=false,spotRefreshing=false;
 
 function setIndicator(id,value,color){
-  $(id).textContent=value;
-  $(id).className=color;
+ $(id).textContent=value;
+ $(id).className=color;
 }
-
 function countdown(){
-  if(!closeAt)return;
-  const s=Math.max(0,Math.floor((closeAt-Date.now())/1000));
-  $("countdown").textContent=
-    String(Math.floor(s/60)).padStart(2,"0")+":"+
-    String(s%60).padStart(2,"0");
+ if(!closeAt)return;
+ const s=Math.max(0,Math.floor((closeAt-Date.now())/1000));
+ $("countdown").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
 }
 
 function analyze(price,target){
+ const valid=priceHistory.filter(x=>Date.now()-x.time<=120000);
+ if(!Number.isFinite(target)||!Number.isFinite(price)){
+  $("directionNote").textContent="Waiting for valid target and BRTI data.";
+  return;
+ }
+ const difference=price-target;
+ const absDifference=Math.abs(difference);
+ $("distance").textContent=(difference>=0?"+":"-")+money(absDifference);
+ const side=difference>0?"ABOVE TARGET":difference<0?"BELOW TARGET":"AT TARGET";
+ setIndicator("direction",side,difference>0?"green":difference<0?"red":"yellow");
 
-  const valid=priceHistory.filter(x=>
-    Date.now()-x.time<=120000
-  );
+ if(valid.length<5){
+  $("directionNote").textContent="Collecting more BRTI observations before calculating momentum.";
+  $("momentum").textContent="COLLECTING";
+  return;
+ }
+ const newest=valid[valid.length-1],cutoff=newest.time-30000;
+ let older=valid[0];
+ for(const item of valid){if(item.time<=cutoff)older=item}
+ const elapsed=(newest.time-older.time)/1000;
+ if(elapsed<5){
+  $("directionNote").textContent="Waiting for a longer observation window.";
+  return;
+ }
+ const movement=newest.price-older.price;
+ const velocity=movement/elapsed;
+ const momentum=movement>0.5?"RISING":movement< -0.5?"FALLING":"FLAT";
+ setIndicator("momentum",momentum,movement>0.5?"green":movement< -0.5?"red":"yellow");
 
-  if(!Number.isFinite(target)||!Number.isFinite(price)){
-    $("directionNote").textContent="Waiting for valid target and BRTI data.";
-    return;
-  }
+ const projectedPrice=price+(velocity*30);
+ const projectedDifference=projectedPrice-target;
+ const projected=projectedDifference>0?"ABOVE TARGET":projectedDifference<0?"BELOW TARGET":"AT TARGET";
+ setIndicator("projectedDirection",projected,projectedDifference>0?"green":projectedDifference<0?"red":"yellow");
 
-  const difference=price-target;
-  const absDifference=Math.abs(difference);
+ const recent=valid.slice(-20);
+ let moves=[];
+ for(let i=1;i<recent.length;i++)moves.push(Math.abs(recent[i].price-recent[i-1].price));
+ const avgMove=moves.length?moves.reduce((a,b)=>a+b,0)/moves.length:0;
+ const distanceUnits=avgMove>0?absDifference/avgMove:999;
+ let risk="LOW",riskColor="green";
+ if(distanceUnits<=2){risk="HIGH";riskColor="red"}
+ else if(distanceUnits<=5){risk="MEDIUM";riskColor="yellow"}
 
-  $("distance").textContent=
-    (difference>=0?"+":"-")+money(absDifference);
+ const approaching=(difference>0&&movement< -0.5)||(difference<0&&movement>0.5);
+ if(approaching&&risk==="LOW"){risk="MEDIUM";riskColor="yellow"}
+ setIndicator("flipRisk",risk,riskColor);
 
-  const side=difference>0?"ABOVE TARGET":
-             difference<0?"BELOW TARGET":"AT TARGET";
+ let warning="NO IMMEDIATE WARNING",warningColor="green";
+ if(difference===0){warning="AT TARGET";warningColor="yellow"}
+ else if(absDifference<=avgMove*2){warning="TARGET VERY CLOSE";warningColor="red"}
+ else if(approaching){warning="PRICE MOVING TOWARD TARGET";warningColor="yellow"}
+ setIndicator("flipWarning",warning,warningColor);
 
-  setIndicator(
-    "direction",
-    side,
-    difference>0?"green":difference<0?"red":"yellow"
-  );
+ $("directionNote").textContent="BRTI is "+side.toLowerCase()+". Short-term projection uses recent price movement over approximately 30 seconds. It is not a final settlement forecast.";
+}
 
-  if(valid.length<5){
-    $("directionNote").textContent=
-      "Collecting more BRTI observations before calculating momentum.";
-    $("momentum").textContent="COLLECTING";
-    return;
-  }
-
-  const newest=valid[valid.length-1];
-
-  // Find an observation approximately 30 seconds old.
-  const cutoff=newest.time-30000;
-  let older=valid[0];
-
-  for(const item of valid){
-    if(item.time<=cutoff) older=item;
-  }
-
-  const elapsed=(newest.time-older.time)/1000;
-
-  if(elapsed<5){
-    $("directionNote").textContent=
-      "Waiting for a longer observation window.";
-    return;
-  }
-
-  const movement=newest.price-older.price;
-  const velocity=movement/elapsed;
-
-  const momentum=movement>0.5?"RISING":
-                 movement< -0.5?"FALLING":"FLAT";
-
-  setIndicator(
-    "momentum",
-    momentum,
-    movement>0.5?"green":movement< -0.5?"red":"yellow"
-  );
-
-  // Short 30-second projection, not a prediction of settlement.
-  const projectedPrice=price+(velocity*30);
-  const projectedDifference=projectedPrice-target;
-
-  const projected=projectedDifference>0?"ABOVE TARGET":
-                  projectedDifference<0?"BELOW TARGET":"AT TARGET";
-
-  setIndicator(
-    "projectedDirection",
-    projected,
-    projectedDifference>0?"green":
-    projectedDifference<0?"red":"yellow"
-  );
-
-  // Estimate recent typical movement.
-  const recent=valid.slice(-20);
-  let moves=[];
-
-  for(let i=1;i<recent.length;i++){
-    moves.push(Math.abs(recent[i].price-recent[i-1].price));
-  }
-
-  const avgMove=moves.length
-    ?moves.reduce((a,b)=>a+b,0)/moves.length
-    :0;
-
-  const distanceUnits=avgMove>0?absDifference/avgMove:999;
-
-  let risk="LOW";
-  let riskColor="green";
-
-  if(distanceUnits<=2){
-    risk="HIGH";
-    riskColor="red";
-  } else if(distanceUnits<=5){
-    risk="MEDIUM";
-    riskColor="yellow";
-  }
-
-  // If momentum is pushing toward the target from the current side,
-  // increase the warning level.
-  const approaching=
-    (difference>0&&movement< -0.5)||
-    (difference<0&&movement>0.5);
-
-  if(approaching&&risk==="LOW"){
-    risk="MEDIUM";
-    riskColor="yellow";
-  }
-
-  setIndicator("flipRisk",risk,riskColor);
-
-  let warning="NO IMMEDIATE WARNING";
-  let warningColor="green";
-
-  if(difference===0){
-    warning="AT TARGET";
-    warningColor="yellow";
-  } else if(absDifference<=avgMove*2){
-    warning="TARGET VERY CLOSE";
-    warningColor="red";
-  } else if(approaching){
-    warning="PRICE MOVING TOWARD TARGET";
-    warningColor="yellow";
-  }
-
-  setIndicator("flipWarning",warning,warningColor);
-
-  $("directionNote").textContent=
-    "BRTI is "+side.toLowerCase()+
-    ". Short-term projection uses recent price movement over approximately 30 seconds. "+
-    "It is not a final settlement forecast.";
+async function refreshSpot(){
+ if(spotRefreshing)return;
+ spotRefreshing=true;
+ try{
+  const response=await fetch("https://api.kraken.com/0/public/Ticker?pair=XBTUSD",{cache:"no-store"});
+  if(!response.ok)throw Error("Spot feed HTTP "+response.status);
+  const payload=await response.json();
+  if(payload.error&&payload.error.length)throw Error(payload.error.join(", "));
+  const ticker=Object.values(payload.result||{})[0];
+  const price=Number(ticker?.c?.[0]);
+  if(!Number.isFinite(price))throw Error("BTC spot price unavailable");
+  $("spotPrice").textContent=money(price);
+  $("spotStatus").textContent="LIVE BTC/USD • Kraken • Updated "+new Date().toLocaleTimeString();
+ }catch(e){
+  $("spotStatus").textContent="Spot feed issue: "+String(e.message||e).slice(0,80);
+ }finally{spotRefreshing=false}
 }
 
 async function refresh(){
+ if(refreshing)return;
+ refreshing=true;
+ $("connection").textContent="● CONNECTING";
+ $("connection").style.color="var(--yellow)";
+ try{
+  const u=API+"/markets?series_ticker=KXBTC15M&status=open&limit=100";
+  const res=await fetch(u,{cache:"no-store"});
+  if(!res.ok)throw Error("Kalshi API returned "+res.status);
+  const data=await res.json(),now=Date.now();
+  const markets=(data.markets||[]).filter(m=>m.status==="active"||m.status==="initialized"||m.status==="open");
+  const live=markets.map(m=>({m,t:new Date(m.close_time||m.expected_expiration_time||0).getTime()}))
+   .filter(x=>x.t>now).sort((a,b)=>a.t-b.t);
+  if(!live.length)throw Error("No future open KXBTC15M contract returned");
 
-  if(refreshing)return;
-  refreshing=true;
+  const m=live[0].m;
+  closeAt=live[0].t;
+  $("market").textContent="BTC 15M";
+  $("ticker").textContent=m.ticker||"KXBTC15M";
+  $("target").textContent=money(m.floor_strike);
+  $("strikeType").textContent=m.floor_strike==null?"Strike not posted yet":"Strike type: "+(m.strike_type||"see contract rules");
+  $("expiry").textContent="Closes "+new Date(closeAt).toLocaleTimeString([],{hour:"numeric",minute:"2-digit",second:"2-digit"});
+  $("yesquote").textContent=quote(m.yes_bid_dollars??(m.yes_bid!=null?m.yes_bid/100:null))+" / "+quote(m.yes_ask_dollars??(m.yes_ask!=null?m.yes_ask/100:null));
+  $("noquote").textContent=quote(m.no_bid_dollars??(m.no_bid!=null?m.no_bid/100:null))+" / "+quote(m.no_ask_dollars??(m.no_ask!=null?m.no_ask/100:null));
+  $("status").textContent=(m.status||"OPEN").toUpperCase();
+  $("updated").textContent="Updated "+new Date().toLocaleTimeString();
+  $("connection").textContent="● KALSHI CONNECTED";
+  $("connection").style.color="var(--green)";
 
-  $("connection").textContent="● CONNECTING";
-  $("connection").style.color="var(--yellow)";
+  const target=Number(m.floor_strike);
+  if(Number.isFinite(target)&&target!==lastTarget){priceHistory=[];lastTarget=target}
+  $("brti").textContent="LOADING...";
+  $("brtiStatus").textContent="Reading Kalshi BRTI feed...";
 
-  try {
+  const br=await fetch(API+"/brti",{cache:"no-store"});
+  const bd=await br.json();
+  if(!br.ok)throw Error("BRTI HTTP "+br.status);
+  const readings=bd.data?.payload||[];
+  if(!readings.length)throw Error("No BRTI readings received");
 
-    const u=API+"/markets?series_ticker=KXBTC15M&status=open&limit=100";
-    const res=await fetch(u,{cache:"no-store"});
-
-    if(!res.ok)throw Error("Kalshi API returned "+res.status);
-
-    const data=await res.json();
-    const now=Date.now();
-
-    const markets=(data.markets||[]).filter(m=>
-      m.status==="active"||
-      m.status==="initialized"||
-      m.status==="open"
-    );
-
-    const live=markets.map(m=>({
-      m,
-      t:new Date(m.close_time||m.expected_expiration_time||0).getTime()
-    }))
-    .filter(x=>x.t>now)
-    .sort((a,b)=>a.t-b.t);
-
-    if(!live.length){
-      throw Error("No future open KXBTC15M contract returned");
-    }
-
-    const m=live[0].m;
-    closeAt=live[0].t;
-
-    $("market").textContent="BTC 15M";
-    $("ticker").textContent=m.ticker||"KXBTC15M";
-    $("target").textContent=money(m.floor_strike);
-
-    $("strikeType").textContent=m.floor_strike==null
-      ?"Strike not posted yet"
-      :"Strike type: "+(m.strike_type||"see contract rules");
-
-    $("expiry").textContent="Closes "+
-      new Date(closeAt).toLocaleTimeString([],{
-        hour:"numeric",minute:"2-digit",second:"2-digit"
-      });
-
-    $("yesquote").textContent=
-      quote(m.yes_bid_dollars??(m.yes_bid!=null?m.yes_bid/100:null))+
-      " / "+
-      quote(m.yes_ask_dollars??(m.yes_ask!=null?m.yes_ask/100:null));
-
-    $("noquote").textContent=
-      quote(m.no_bid_dollars??(m.no_bid!=null?m.no_bid/100:null))+
-      " / "+
-      quote(m.no_ask_dollars??(m.no_ask!=null?m.no_ask/100:null));
-
-    $("status").textContent=(m.status||"OPEN").toUpperCase();
-    $("updated").textContent="Updated "+new Date().toLocaleTimeString();
-
-    $("connection").textContent="● KALSHI CONNECTED";
-    $("connection").style.color="var(--green)";
-
-    const target=Number(m.floor_strike);
-
-    if(Number.isFinite(target)&&target!==lastTarget){
-      priceHistory=[];
-      lastTarget=target;
-    }
-
-    $("brti").textContent="LOADING...";
-    $("brtiStatus").textContent="Reading Kalshi BRTI feed...";
-
-    const br=await fetch(API+"/brti",{cache:"no-store"});
-    const bd=await br.json();
-
-    if(!br.ok)throw Error("BRTI HTTP "+br.status);
-
-    const readings=bd.data?.payload||[];
-
-    if(!readings.length){
-      throw Error("No BRTI readings received");
-    }
-
-    for(const item of readings){
-      const p=Number(item.value);
-      const t=Number(item.time);
-
-      if(Number.isFinite(p)&&Number.isFinite(t)){
-        if(!priceHistory.some(x=>x.time===t)){
-          priceHistory.push({price:p,time:t});
-        }
-      }
-    }
-
-    priceHistory.sort((a,b)=>a.time-b.time);
-    priceHistory=priceHistory.filter(x=>
-      Date.now()-x.time<=120000
-    );
-
-    const latest=priceHistory[priceHistory.length-1];
-
-    if(!latest)throw Error("No valid BRTI price");
-
-    $("brti").textContent=money(latest.price);
-
-    $("brtiStatus").textContent=
-      "LIVE BRTI • Updated "+
-      new Date(latest.time).toLocaleTimeString();
-
-    analyze(latest.price,target);
-    countdown();
-
-  } catch(e){
-
-    $("connection").textContent="● CONNECTION ISSUE";
-    $("connection").style.color="var(--red)";
-    $("ticker").textContent=String(e.message||e).slice(0,100);
-
-    $("brtiStatus").textContent=
-      "Feed issue: "+String(e.message||e).slice(0,100);
-
-  } finally {
-    refreshing=false;
+  for(const item of readings){
+   const p=Number(item.value),t=Number(item.time);
+   if(Number.isFinite(p)&&Number.isFinite(t)&&!priceHistory.some(x=>x.time===t)){
+    priceHistory.push({price:p,time:t});
+   }
   }
+  priceHistory.sort((a,b)=>a.time-b.time);
+  priceHistory=priceHistory.filter(x=>Date.now()-x.time<=120000);
+  const latest=priceHistory[priceHistory.length-1];
+  if(!latest)throw Error("No valid BRTI price");
+  $("brti").textContent=money(latest.price);
+  $("brtiStatus").textContent="LIVE BRTI • Updated "+new Date(latest.time).toLocaleTimeString();
+  analyze(latest.price,target);
+  countdown();
+ }catch(e){
+  $("connection").textContent="● CONNECTION ISSUE";
+  $("connection").style.color="var(--red)";
+  $("ticker").textContent=String(e.message||e).slice(0,100);
+  $("brtiStatus").textContent="Feed issue: "+String(e.message||e).slice(0,100);
+ }finally{refreshing=false}
 }
 
-$("refresh").addEventListener("click",refresh);
-
+$("refresh").addEventListener("click",()=>{refresh();refreshSpot()});
 refresh();
+refreshSpot();
 setInterval(refresh,10000);
+setInterval(refreshSpot,10000);
 setInterval(countdown,1000);
 
-if("serviceWorker" in navigator&&
-   location.protocol.startsWith("http")){
-  navigator.serviceWorker.register("./sw.js").catch(()=>{});
+if("serviceWorker" in navigator&&location.protocol.startsWith("http")){
+ navigator.serviceWorker.register("./sw.js").catch(()=>{});
 }
 </script>
-
 </body>
 </html>
